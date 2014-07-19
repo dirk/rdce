@@ -25,4 +25,4 @@ if(!fs.existsSync(filepath)){
 var rdce = require('../lib/rdce'),
     source = fs.readFileSync(filepath, {encoding: 'utf8'})
 
-process.stdout.write(rdce.process('test.js', source))
+process.stdout.write(rdce.process(filepath, source))
