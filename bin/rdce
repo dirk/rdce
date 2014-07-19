@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+var argv = process.argv.slice(2)
+if(argv.length === 0){
+  process.stdout.write([
+    'Usage: rdce file'
+  ].join('\n')+'\n')
+  process.exit()
+}
+
+var path = require('path'),
+    fs = require('fs'),
+    filepath = argv[0]
+
+if(filepath === '--runtime' || filepath === '-r'){
+  runtimepath = path.resolve(__dirname, '..', 'lib', 'runtime.js')
+  process.stdout.write(fs.readFileSync(runtimepath))
+  process.exit(0)
+}
+
+if(!fs.existsSync(filepath)){
+  process.stdout.write('File not found: '+filepath+'\n')
+  process.exit(1)
+}
+
+var rdce = require('../lib/rdce'),
+    source = fs.readFileSync(filepath, {encoding: 'utf8'})
+
+process.stdout.write(rdce.process('test.js', source))
