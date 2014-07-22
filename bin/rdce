@@ -12,17 +12,18 @@ if(argv.length === 0 || argv.indexOf('-h') !== -1 || argv.indexOf('--help') !== 
 }
 
 var path = require('path'),
-    fs = require('fs')
+    fs   = require('fs'),
+    includeRuntime = true // If the runtime should be in the preface
 
+// Check if just the raw runtime is wanted
 var runtimepath = path.resolve(__dirname, '..', 'lib', 'runtime.js')
 if(argv.indexOf('--runtime') !== -1 || argv.indexOf('-r') !== -1){
   process.stdout.write(fs.readFileSync(runtimepath))
   process.exit(0)
 }
 
-var includeRuntime = true,
-    noRuntimeIndex = argv.indexOf('--no-runtime')
-
+// Check if the runtime should be included in the preface
+var noRuntimeIndex = argv.indexOf('--no-runtime')
 if(noRuntimeIndex !== -1){
   includeRuntime = false
   argv = argv.filter(function(v){ return v !== '--no-runtime' })
@@ -38,6 +39,7 @@ if(!fs.existsSync(filepath)){
 var rdce = require('../lib/rdce'),
     source = fs.readFileSync(filepath, {encoding: 'utf8'})
 
+// Print the runtime if it should be in the preface
 if(includeRuntime){
   var uglifyjs = require('uglify-js'),
       runtime = uglifyjs.minify(runtimepath).code
