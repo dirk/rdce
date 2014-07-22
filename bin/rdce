@@ -1,28 +1,47 @@
 #!/usr/bin/env node
 var argv = process.argv.slice(2)
-if(argv.length === 0){
+if(argv.length === 0 || argv.indexOf('-h') !== -1 || argv.indexOf('--help') !== -1){
   process.stdout.write([
-    'Usage: rdce file'
+    'Usage: rdce file',
+    '',
+    'Options:',
+    '  -r, --runtime    Print just the runtime library',
+    '  --no-runtime     Don\'t include the runtime preface in output code'
   ].join('\n')+'\n')
   process.exit()
 }
 
 var path = require('path'),
-    fs = require('fs'),
-    filepath = argv[0]
+    fs = require('fs')
 
-if(filepath === '--runtime' || filepath === '-r'){
-  runtimepath = path.resolve(__dirname, '..', 'lib', 'runtime.js')
+var runtimepath = path.resolve(__dirname, '..', 'lib', 'runtime.js')
+if(argv.indexOf('--runtime') !== -1 || argv.indexOf('-r') !== -1){
   process.stdout.write(fs.readFileSync(runtimepath))
   process.exit(0)
 }
 
-if(!fs.existsSync(filepath)){
-  process.stdout.write('File not found: '+filepath+'\n')
-  process.exit(1)
+var includeRuntime = true,
+    noRuntimeIndex = argv.indexOf('--no-runtime')
+
+if(noRuntimeIndex !== -1){
+  includeRuntime = false
+  argv = argv.filter(function(v){ return v !== '--no-runtime' })
 }
 
+// Get the filepath out of the arguments
+var filepath = argv[0]
+if(!fs.existsSync(filepath)){
+  process.stderr.write('File not found: '+filepath+'\n')
+  process.exit(1)
+}
+// Load the library and read the source file
 var rdce = require('../lib/rdce'),
     source = fs.readFileSync(filepath, {encoding: 'utf8'})
 
+if(includeRuntime){
+  var uglifyjs = require('uglify-js'),
+      runtime = uglifyjs.minify(runtimepath).code
+  process.stdout.write(runtime)
+  process.stdout.write("\n")
+}
 process.stdout.write(rdce.process(filepath, source))
