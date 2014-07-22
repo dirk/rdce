@@ -8,7 +8,6 @@ The example below was generated via the following steps:
 
 ```bash
 rdce dep/diff_match_patch.js > dep/diff_match_patch.rdce.js
-rdce -r > dep/rdce.js
 ```
 
 Then the testing HTML document was updated like:
@@ -16,7 +15,6 @@ Then the testing HTML document was updated like:
 ```html
 <!-- Plain version: <script type="text/javascript" src="dep/diff_match_patch.js"></script> -->
 <!-- Rdce version: -->
-<script type="text/javascript" src="test/rdce.js"></script>
 <script type="text/javascript" src="dep/diff_match_patch.rdce.js"></script>
 ```
 

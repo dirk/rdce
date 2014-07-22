@@ -1,10 +1,14 @@
 {
   "name": "rdce",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Runtime dead code elimination for JavaScript",
   "main": "lib/rdce.js",
   "bin": {
     "rdce": "bin/rdce"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dirk/rdce.git"
   },
   "dependencies": {
     "uglify-js": "~2.4.15"
